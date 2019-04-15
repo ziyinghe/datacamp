@@ -1,0 +1,30 @@
+import numpy as np
+import pandas as pd
+import talib as tb
+import tushare as ts
+import matplotlib as plt
+
+#initialize
+pro=ts.pro_api()
+
+def getftinfo(exchange):
+    namei=globals()
+    namei['ftginfo'+exchange]=pro.fut_basic(exchange=exchange,fields='ts_code,symbol,name,fut_code,quote_unit_desc,d_mode_desc,d_month,last_ddate,delist_date')
+    namei['ftqinfo'+exchange]=pro.fut_basic(exchange=exchange,fields='ts_code,symbol,name,multiplier,trade_unit,per_unit,quote_unit')
+    return namei
+
+def getftprice(taglist,startdate,enddate):
+    namep=globals()
+    for y in range(len(taglist)):
+        target=taglist.iloc[y]
+        for i in range(len(taglist)):
+            namep['ft'+target]=pro.fut_daily(ts_code=target,start_date=startdate,end_date=enddate)
+            i=i+1
+        y=y+1
+    return namep
+
+def getftbygroup(inclulist,critiera):
+    nameg=globals()
+    for i in inclulist.groupby(critiera):
+        nameg[i[0]]=pd.DataFrame(np.array(list(i)[1]))
+    return nameg
