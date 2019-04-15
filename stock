@@ -1,0 +1,37 @@
+import numpy as np
+import pandas as pd
+import talib as tb
+import tushare as ts
+import matplotlib as plt
+import datetime
+now=datetime.datetime.now()
+#initialize
+pro=ts.pro_api()
+
+
+startd='20150101'
+endd='20190101'
+
+#data collection
+stginfo= pro.stock_basic(exchange='',list_status='L',fields='ts_code,symbol,name,area,industry,market')
+stcode=stginfo['ts_code']
+
+#group by industry
+def sgroupby(inclulist,critiera):
+    nameg=globals()
+    for i in inclulist.groupby(critiera):
+        nameg[i[0]]=pd.DataFrame(np.array(list(i))[1])
+    return nameg
+
+#to get price data
+def getprice(codelist,startdate,enddate):
+    namep=globals()
+    for y in range(len(codelist)):
+        target=codelist.iloc[y]
+        for i in range(len(codelist)):
+            namep['s'+target[0:6]]=ts.pro_bar(ts_code=target,start_date=startdate,end_date=enddate,factors=['tor'])
+            i=i+1
+        y=y+1
+    return namep
+
+
