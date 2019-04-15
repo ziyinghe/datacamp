@@ -1,0 +1,36 @@
+#filter model
+
+def filofcode(targetlist,filter1,filter2,condition1,condition2,logic12,exp1,exp2,equal):
+    if equal==1:
+        filter2=filter1
+        condition2=condition1
+        codelist=targetlist[(targetlist[filter1]==condition1) & (targetlist[filter2]==condition2)]
+    elif equal==2:
+        if logic12==1:
+            codelist=targetlist[(targetlist[filter1]==condition1) & (targetlist[filter2]==condition2)]
+        else:
+            codelist=targetlist[(targetlist[filter1]==condition1) or (targetlist[filter2]==condition2)]
+    elif equal==0:
+        if exp1==1:
+            if logic12==1:
+                if exp2==1:
+                    codelist=targetlist[(targetlist[filter1]>condition1) & (targetlist[filter2]>condition2)]
+                else:
+                    codelist=targetlist[(targetlist[filter1]>condition1) & (targetlist[filter2]<condition2)]
+            elif exp2==1:
+                codelist=targetlist[(targetlist[filter1]>condition1) or (targetlist[filter2]>condition2)]
+            else:
+                codelist=targetlist[(targetlist[filter1]>condition1) or (targetlist[filter2]<condition2)]
+        elif logic12==1:
+            if exp2==1:
+                codelist=targetlist[(targetlist[filter1]<condition1) & (targetlist[filter2]>condition2)]
+            else:
+                codelist=targetlist[(targetlist[filter1]<condition1) & (targetlist[filter2]<condition2)]
+        elif exp2==1:
+            codelist=targetlist[(targetlist[filter1]<condition1) or (targetlist[filter2]>condition2)]
+        else:
+            codelist=targetlist[(targetlist[filter1]<condition1) or (targetlist[filter2]<condition2)]
+    else:
+         print('warning!Invalid input for equal!!')
+                
+    return codelist      
